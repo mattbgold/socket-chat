@@ -1,35 +1,204 @@
 <!doctype html>
 <html>
-  <head>
+
+<head>
     <title>Socket.IO chat</title>
+    <link async href="http://fonts.googleapis.com/css?family=Warnes" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+        form {
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 100%;
+            margin-right: .5%;
+        }
+        
+        #messages li {
+            display: block;
+            margin-left: 100px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0px;
+            border: none;
+            font: normal 32px/normal "Warnes", Helvetica, sans-serif;
+            color: rgba(255, 255, 255, 1);
+            text-decoration: normal;
+            -o-text-overflow: clip;
+            text-overflow: clip;
+            white-space: normal;
+            border-bottom: 1px #666 dashed;
+        }
+        
+        #messages li > div {
+            padding: 10px;
+        }
+        
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .zoom-container {
+            transform: perspective( 2000px);
+            -webkit-transform: perspective( 2000px);
+            transform-origin: 0% 50%;
+            -webkit-transform-origin: 0% 50%;
+        }
+        
+        .container {
+            -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+            -webkit-transform: perspective(2000px) rotateY(25deg) rotateX(10deg);
+            transform: perspective(2000px) rotateY( 25deg) rotateX(10deg);
+        }
+        
+        body {
+            background-image: url("http://enjoycss.com/bg-img/custom/4163-qmrgsn.png");
+        }
     </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
+</head>
+
+<body oncontextmenu="return false;">
+    <div class="zoom-container">
+        <div class="container">
+            <ul id="messages"></ul>
+        </div>
+    </div>
+    <div style="height: 200px;"></div>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+        <input id="m" autofocus="autofocus" placeholder="Type message and press enter..." autocomplete="off" />
     </form>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-  var socket = io();
-  $('form').submit(function() {
-    socket.emit('chat message', $('#m').val());
-    $('#m').val('');
-    return false;
-});
-socket.on('chat message', function(msg) {
-  $('#messages').append($('<li>').html(msg));
-});
-</script>
-  </body>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="hamster.js"></script>
+    <script>
+        var colors = ['F00', '0F0', '00F', 'FF0', 'F0F', '0FF'];
+        var myCol = '#' + colors[Math.floor(Math.random() * 6)];
+
+        var socket = io();
+
+        $('form').submit(function() {
+            if (!$('#m').val().trim()) {
+                return false;
+            }
+            socket.emit('chat message', $('#m').val(), myCol);
+            $('#m').val('');
+            return false;
+        });
+
+        socket.on('chat message', function(msg, col) {
+            var li = makeMessage(msg, col);
+            
+            $('#messages').append(li);
+            li.children('div').fadeTo(500, 1);
+
+            var $lis = $('#messages').children();
+            if ($lis.length > 10) {
+                fadeAway($lis[$lis.length - 11]);
+            }
+        });
+
+        socket.on('connected', function(col) {
+           var li = makeMessage('<p style="font-size:20px;">➪ user connected</p>', col);
+           $('#messages').append(li);
+            li.children('div').fadeTo(500, 1);
+        });
+
+        var makeMessage = function(msg, col) {
+            return $('<li style="text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px ' + col + ' , 0 0 70px ' + col + ' , 0 0 80px ' + col + ' , 0 0 100px ' + col + ';">').append($('<div style="opacity: 0;"></div>').html(msg));
+        };
+
+        var fadeAway = function(li) {
+            $(li).children('div').fadeTo(500, 0, function() {
+                $(this).slideUp(700, function() {
+                    $(this).parent().remove();
+                });
+            });
+        };
+
+        setInterval(function() {
+            var $sel = $('li > div');
+            $.each($sel, function(i, dv) {
+                var $d = $(dv);
+                if ($d.css('opacity').charAt(2) === '8') {
+                    $d.css('opacity', '1');
+                }
+                if (Math.random() < .07 && $d.css('opacity') === '1') {
+                    $d.css('opacity', '.9');
+                }
+            });
+        }, 100);
+
+
+        $(function() {
+            socket.emit('connected', myCol);
+            var $elem = $('.container')[0];
+
+            var mouseDown = 0;
+            var cx = 0;
+            var cy = 0;
+            var degX = 25;
+            var degY = 10;
+            var cdegx = 25;
+            var cdegy = 10;
+            var tRotate = 'RotateY(25deg) rotateX(10deg)';
+            var tPerspective = 2000;
+            var tTranslateZ = 0;
+            
+            document.body.onmousedown = function(e) {
+                if (e.which === 3) {
+                    mouseDown = 1;
+                    cx = e.clientX;
+                    cy = e.clientY;
+                }
+
+            }
+            document.body.onmouseup = function(e) {
+                if (e.which === 3) {
+                    mouseDown = 0;
+                    cdegx = degX;
+                    cdegy = degY;
+                }
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                // vars 
+                if (!mouseDown) {
+                    return false;
+                }
+                var centroX = (cx - e.clientX) * .4,
+                    centroY = (cy - e.clientY) * .4;
+                degX = cdegx + centroX,
+                    degY = cdegy + centroY
+
+                tRotate = 'rotateY(' + degX + 'deg) rotateX(' + degY + 'deg)';
+                $('.container')[0].style['-webkit-transform'] = 'perspective(' + tPerspective + 'px) ' + tRotate;
+                $('.container')[0].style['transform'] = 'perspective(' + tPerspective + 'px) ' + tRotate;
+            });
+
+            Hamster(document).wheel(function(event, delta, deltaX, deltaY) {
+                if (event.originalEvent.shiftKey) {
+                    if (delta === 1) {         
+                        tTranslateZ += 100;
+                    } else if (delta === -1) {
+                        tTranslateZ -= 100;
+                    }
+                    $('.zoom-container')[0].style['-webkit-transform'] = ' perspective(' + tPerspective + 'px) translateZ(' + tTranslateZ + 'px) ';
+                    $('.zoom-container')[0].style['transform'] = ' perspective(' + tPerspective + 'px) translateZ(' + tTranslateZ + 'px) ';
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+</body>
+
 </html>
