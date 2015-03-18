@@ -36,12 +36,24 @@ var macros = {
     return str;
 }}, '/macro': {desc: 'add a new macro', fn: function(inp){
     var parts = splitWithTail(inp.trim(), ' ', 1);
-    macros[parts[0]] = { desc: 'custom', fn: function(msg) {
-        return parts[1];
+    macros[parts[0]] = { desc: 'custom', fn: function(argstr) {
+        var args = argstr.trim().split(' ');
+        return parts[1].trim().format(args);
     }};
 
     return '[added new macro: '+parts[0]+']';
 }}};
+
+if (!String.prototype.format) {
+  String.prototype.format = function(args) {
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
 
 function splitWithTail(str,delim,count){
   var parts = str.split(delim);
