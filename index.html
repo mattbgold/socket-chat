@@ -109,6 +109,7 @@
                     fadeAway($lis[$lis.length - 11]);
                 }
             });
+            window.scrollTo(0,document.body.scrollHeight);
         });
 
         socket.on('chat message', function(msg, col) {
