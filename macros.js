@@ -56,8 +56,8 @@ module.exports = {
 		usg: '/help',
 		fn: function() {
 			var str = '<table style="font-size:14px; font-family: arial;">';
-			for (var n in macros) {
-				str += '<tr><td style="padding-right: 20px;">' + n + '</td><td style="padding-right:20px;">' + macros[n].desc + '</td><td>' + macros[n].usg + '</td></tr>';
+			for (var n in module.exports) {
+				str += '<tr><td style="padding-right: 20px;">' + n + '</td><td style="padding-right:20px;">' + module.exports[n].desc + '</td><td>' + module.exports[n].usg + '</td></tr>';
 			}
 			str += '</table>';
 			return str;
@@ -71,7 +71,7 @@ module.exports = {
 			if (parts[0] === '/private' || parts[0] === '/mp3' || parts[0] === '/img' || parts[0] === '/reset' || parts[0] === '/script' || parts[0] === '/macro' || parts[0] === '/help')
 				return '[failed to create macro: name taken by system command]';
 			
-			var w = macros[parts[0]] ? 'updated' : 'added new';
+			var w = module.exports[parts[0]] ? 'updated' : 'added new';
 
 			var argCt = 0;
 			var exampleArgs = ' ';
@@ -84,7 +84,7 @@ module.exports = {
 				exampleArgs += 'arg' + i + ' ';
 			}
 
-			macros[parts[0]] = {
+			module.exports[parts[0]] = {
 				desc: 'custom macro',
 				usg: parts[0] + exampleArgs,
 				fn: function(argstr) {
@@ -99,4 +99,18 @@ module.exports = {
 			return '[' + w + ' macro: ' + parts[0] + ']';
 		}
 	}
+};
+
+function splitWithTail(str, delim, count) {
+    var parts = str.split(delim);
+    var tail = parts.slice(count).join(delim);
+    var result = parts.slice(0, count);
+    result.push(tail);
+    return result;
+}
+
+String.prototype.format = function(args) {
+	return this.replace(/{(\d+)}/g, function(match, number) {
+		return typeof args[number] != 'undefined' ? args[number] : match;
+	});
 };

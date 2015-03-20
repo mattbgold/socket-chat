@@ -76,17 +76,3 @@ function resolveMacros(msg) {
     }
     return msg;
 }
-
-function splitWithTail(str, delim, count) {
-    var parts = str.split(delim);
-    var tail = parts.slice(count).join(delim);
-    var result = parts.slice(0, count);
-    result.push(tail);
-    return result;
-}
-
-String.prototype.format = function(args) {
-	return this.replace(/{(\d+)}/g, function(match, number) {
-		return typeof args[number] != 'undefined' ? args[number] : match;
-	});
-};
