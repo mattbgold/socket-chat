@@ -1,0 +1,57 @@
+body {
+	background-image: url("http://enjoycss.com/bg-img/custom/4163-qmrgsn.png");
+}
+
+form {
+	padding: 3px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+form input {
+	padding: 10px;
+	width: 98%;
+	margin-right: .5%;
+}
+
+.zoom-container {
+	transform: perspective( 2000px);
+	-webkit-transform: perspective( 2000px);
+	transform-origin: 0% 50%;
+	-webkit-transform-origin: 0% 50%;
+}
+
+.container {
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	-webkit-transform: perspective(2000px) rotateY(25deg) rotateX(10deg);
+	transform: perspective(2000px) rotateY( 25deg) rotateX(10deg);
+}
+
+#messages li {
+	display: block;
+	margin-left: 100px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0px;
+	border: none;
+	font: normal 32px/normal "Warnes", Helvetica, sans-serif;
+	color: rgba(255, 255, 255, 1);
+	text-decoration: normal;
+	-o-text-overflow: clip;
+	text-overflow: clip;
+	white-space: normal;
+	border-bottom: 1px #666 dashed;
+}
+
+#messages li > div {
+	padding: 10px;
+}
+
+#messages {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
