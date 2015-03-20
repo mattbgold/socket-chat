@@ -12,7 +12,6 @@ module.exports = {
 		desc: 'erase chat history',
 		usg: '/reset',
 		fn: function(msg) {
-			messages = JSON.parse(JSON.stringify(initMsgs));
 			return '[chat history has been reset]';
 		}
 	},
