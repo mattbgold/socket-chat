@@ -26,7 +26,7 @@ module.exports = {
 		desc: 'embeds a given image',
 		usg: '/img http://myimage.gif',
 		fn: function(msg) {
-			return '<marquee direction="right"><img src="' + msg + '"/></marquee>';
+			return '<img src="' + msg + '"/>';
 		}
 	},
 	'/troll': {
