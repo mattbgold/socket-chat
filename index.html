@@ -11,14 +11,14 @@
             bottom: 0;
             width: 100%;
         }
-
+        
         form input {
             border: 0;
             padding: 10px;
             width: 100%;
             margin-right: .5%;
         }
-
+        
         #messages li {
             display: block;
             margin-left: 100px;
@@ -35,30 +35,31 @@
             white-space: normal;
             border-bottom: 1px #666 dashed;
         }
-#messages li > div {
+        
+        #messages li > div {
             padding: 10px;
         }
-
+        
         #messages {
             list-style-type: none;
             margin: 0;
             padding: 0;
         }
-
+        
         .zoom-container {
             transform: perspective( 2000px);
             -webkit-transform: perspective( 2000px);
             transform-origin: 0% 50%;
             -webkit-transform-origin: 0% 50%;
         }
-
+        
         .container {
             -webkit-transform-origin: 50% 50%;
             transform-origin: 50% 50%;
             -webkit-transform: perspective(2000px) rotateY(25deg) rotateX(10deg);
             transform: perspective(2000px) rotateY( 25deg) rotateX(10deg);
         }
-
+        
         body {
             background-image: url("http://enjoycss.com/bg-img/custom/4163-qmrgsn.png");
         }
@@ -102,14 +103,14 @@
             $.each(oldMessages, function(i, msg) {
                 var li = makeMessage(msg.msg, msg.col);
                 $('#messages').append(li);
-                li.children('div').fadeTo(500,1);
+                li.children('div').fadeTo(500, 1);
 
                 var $lis = $('#messages').children();
-                if($lis.length > 10) {
+                if ($lis.length > 10) {
                     fadeAway($lis[$lis.length - 11]);
                 }
             });
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         });
 
         socket.on('chat message', function(msg, col) {
@@ -125,8 +126,8 @@
         });
 
         socket.on('connected', function(col) {
-           var li = makeMessage('<p style="font-size:20px;">➪ user connected</p>', col);
-           $('#messages').append(li);
+            var li = makeMessage('<p style="font-size:20px;">➪ user connected</p>', col);
+            $('#messages').append(li);
             li.children('div').fadeTo(500, 1);
         });
 
@@ -143,21 +144,21 @@
         };
 
         $('#m').keydown(function(e) {
-            switch( e.keyCode ) {
-            case 38:
-            // handle up
-            if(cmdStack[cmdPtr+1]) {
-                cmdPtr++;
-                $('#m').val(cmdStack[cmdPtr]);
-            }
-                break;
-            case 40:
-            // handle down
-            if(cmdPtr >= 0) {
-                cmdPtr--;
-                $('#m').val(cmdStack[cmdPtr]);
-            }
-                break;
+            switch (e.keyCode) {
+                case 38:
+                    // handle up
+                    if (cmdStack[cmdPtr + 1]) {
+                        cmdPtr++;
+                        $('#m').val(cmdStack[cmdPtr]);
+                    }
+                    break;
+                case 40:
+                    // handle down
+                    if (cmdPtr >= 0) {
+                        cmdPtr--;
+                        $('#m').val(cmdStack[cmdPtr]);
+                    }
+                    break;
             }
         });
 
@@ -213,7 +214,7 @@
                 var centroX = (cx - e.clientX) * .4,
                     centroY = (cy - e.clientY) * .4;
                 degX = cdegx + centroX,
-                degY = cdegy + centroY
+                    degY = cdegy + centroY
 
                 tRotate = 'rotateY(' + degX + 'deg) rotateX(' + degY + 'deg)';
                 $('.container')[0].style['-webkit-transform'] = 'perspective(' + tPerspective + 'px) ' + tRotate;
