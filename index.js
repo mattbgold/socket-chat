@@ -20,21 +20,21 @@ var welcomeMsg = {
 var messages = [];
 
 io.on('connection', function(socket) {
-    //console.log('a user connected');
+    console.log('a user connected');
     socket.on('disconnect', function() {
-        //console.log('user disconnected');
+        console.log('user disconnected');
         //TODO: emit user disconnected
     });
 
     socket.on('chat message', function(msg, col) {
-        //console.log('message: ' + msg);
+        console.log('message: ' + msg);
         var p = false;
         if (msg.indexOf('/private') === 0) {
             p = true;
         }
-		else if (msg.indexOf('/reset') === 0) {
-		    messages = [];
-		}
+	else if (msg.indexOf('/reset') === 0) {
+	    messages = [];
+	}
 		
         msg = resolveMacros(msg);
         if (p) {
@@ -56,7 +56,7 @@ io.on('connection', function(socket) {
 });
 
 http.listen(parseInt(port), function() {
-    //console.log('listening on *:' + port);
+    console.log('listening on *:' + port);
 });
 
 function resolveMacros(msg) {
