@@ -52,7 +52,7 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('connected', col);
     });
 
-    socket.emit('load', messages.slice(messages.length - 9, messages.length).concat(welcomeMsg));
+    socket.emit('load', messages.length > 9 ? messages.slice(messages.length - 9, messages.length).concat(welcomeMsg) : messages.concat(welcomeMsg));
 });
 
 http.listen(parseInt(port), function() {
